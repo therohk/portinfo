@@ -1,0 +1,145 @@
+info:
+    version: 1.0.0
+    title: 'GitRows API Interface'
+    contact:
+        name: therohk
+        url: 'https://github.com/therohk'
+    description: "\n\n---\n\nCreated with [GitRows](https://gitrows.com)"
+    x-gitrows-repository: 'https://github.com/therohk/portinfo/blob/master/powport-locations.csv'
+    x-gitrows-api-path: '@github/therohk/portinfo/powport-locations.csv'
+components:
+    schemas:
+        Error:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                documentation:
+                    type: object
+                    properties:
+                        description:
+                            type: string
+                        url:
+                            type: string
+        Record:
+            type: object
+            properties:
+                latitude:
+                    type: number
+                    format: float
+                longitude:
+                    type: number
+                    format: float
+                name:
+                    type: string
+                country:
+                    type: string
+                refcode:
+                    type: string
+openapi: 3.0.0
+servers:
+    -
+        url: 'https://api.gitrows.com'
+paths:
+    /@github/therohk/portinfo/powport-locations.csv:
+        get:
+            description: 'Return a list of records'
+            summary: ""
+            operationId: listRecords
+            parameters:
+                -
+                    in: query
+                    name: latitude
+                    schema:
+                        oneOf:
+                            -
+                                type: number
+                            -
+                                type: string
+                    description: "Select records that match value for `latitude`.\n\nYou can optionally use the following comparison operators as prefixes to your values, e.g. `latitude=gt:10`:\n\n`not:` equals not; `lt:` less than; `lte:` less than or equal; `gt:` greater than; `gte:` greater than or equal"
+                    allowReserved: true
+                -
+                    in: query
+                    name: longitude
+                    schema:
+                        oneOf:
+                            -
+                                type: number
+                            -
+                                type: string
+                    description: "Select records that match value for `longitude`.\n\nYou can optionally use the following comparison operators as prefixes to your values, e.g. `longitude=gt:10`:\n\n`not:` equals not; `lt:` less than; `lte:` less than or equal; `gt:` greater than; `gte:` greater than or equal"
+                    allowReserved: true
+                -
+                    in: query
+                    name: name
+                    schema:
+                        type: string
+                    description: "Select records that match value for `name`.\n\nYou can optionally use the following comparison operators as prefixes to your values, e.g. `name=*:foo`:\n\n`starts:` text starts with, alias: `^:`; `contains:` contains text, alias: `*:`; `ends:` text ends with, alias: `$:`"
+                    allowReserved: true
+                -
+                    in: query
+                    name: country
+                    schema:
+                        type: string
+                    description: "Select records that match value for `country`.\n\nYou can optionally use the following comparison operators as prefixes to your values, e.g. `country=*:foo`:\n\n`starts:` text starts with, alias: `^:`; `contains:` contains text, alias: `*:`; `ends:` text ends with, alias: `$:`"
+                    allowReserved: true
+                -
+                    in: query
+                    name: refcode
+                    schema:
+                        type: string
+                    description: "Select records that match value for `refcode`.\n\nYou can optionally use the following comparison operators as prefixes to your values, e.g. `refcode=*:foo`:\n\n`starts:` text starts with, alias: `^:`; `contains:` contains text, alias: `*:`; `ends:` text ends with, alias: `$:`"
+                    allowReserved: true
+                -
+                    in: query
+                    name: $count
+                    schema:
+                        type: string
+                    description: 'Counts the records in the data set, use `*` or any `columnName` as parameter'
+                    allowReserved: true
+                -
+                    in: query
+                    name: $avg
+                    schema:
+                        type: string
+                    description: 'Calculates the average of all numeric values in `columnName`'
+                    allowReserved: true
+                -
+                    in: query
+                    name: $sum
+                    schema:
+                        type: string
+                    description: 'Calculates the sum of all numeric values in `columnName`'
+                    allowReserved: true
+                -
+                    in: query
+                    name: $min
+                    schema:
+                        type: string
+                    description: 'Returns the smallest of all numeric values in `columnName`'
+                    allowReserved: true
+                -
+                    in: query
+                    name: $max
+                    schema:
+                        type: string
+                    description: 'Returns the largest of all numeric values in `columnName`'
+                    allowReserved: true
+            responses:
+                '200':
+                    description: 'A list of records with any optionally provided filters applied.'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Record'
+                default:
+                    description: 'Error Payload'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
